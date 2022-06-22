@@ -1,3 +1,4 @@
+.allure/
 out/
 target/
 test-output/
