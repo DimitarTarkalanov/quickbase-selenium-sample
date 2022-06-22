@@ -1,0 +1,10 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+
+<suite name="WebDriverIO Sample Test Suite">
+    <test name="Selenium WebDriver Tests">
+        <classes>
+            <class name="">
+            </class>
+        </classes>
+    </test>
+</suite>
