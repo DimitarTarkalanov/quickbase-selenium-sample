@@ -6,9 +6,14 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import pages.LandingPage;
+import pages.PageObject;
+import pages.SearchPage;
 import pages.apidocs.APIDocsNavMenu;
 import pages.apidocs.APIDocsPage;
+import pages.apidocs.ClickPage;
+import pages.apidocs.DragAndDropPage;
 import pages.components.NavBar;
+import pages.components.SearchModal;
 
 import java.util.List;
 
@@ -59,5 +64,77 @@ public class APIDocsTests extends TestObject {
         List<String> sectionItemList = navMenu.getSectionList(section);
 
         Assert.assertEquals(sectionItemList, expectedItemList);
+    }
+
+    @DataProvider(name = "setupSearchResultNavigation")
+    protected Object[][] setupSearchResultNavigation() {
+
+        return new Object[][]{
+                {"Click", ClickPage.class, ClickPage.PAGE_HEADING},
+                {"draganddrop", DragAndDropPage.class, DragAndDropPage.PAGE_HEADING},
+        };
+    }
+
+    @Test(dataProvider = "setupSearchResultNavigation", description = "Verify whether user is redirected to the corresponding page after search result selection", invocationCount = 10)
+    public void testSearchResultNavigation(String searchCriteria, Class<? extends PageObject> pageType, String expectedHeading) throws Exception {
+        WebDriver driver = super.getDriver();
+
+        searchInAPIDocsPage(driver, searchCriteria)
+                .clickOnResult(searchCriteria);
+
+        PageObject page = pageType.getConstructor(WebDriver.class).newInstance(driver);
+        page.onPage();
+        String actualHeading = page.getHeading();
+        Assert.assertEquals(actualHeading, expectedHeading);
+    }
+
+    @DataProvider(name = "setupSearchNoResults")
+    protected Object[][] setupSearchNoResults() {
+        return new Object[][]{
+                {"43"},
+                {"mn"},
+                {"дс"},
+        };
+    }
+
+    @Test(dataProvider = "setupSearchNoResults", description = "Verify whether a message is presented to the user when there are no results for a given search criteria")
+    public void testSearchNoResults(String searchCriteria) {
+        WebDriver driver = super.getDriver();
+
+        SearchModal searchModal = searchInAPIDocsPage(driver, searchCriteria);
+        Assert.assertFalse(searchModal.areResultsPresented(), "Results are presented!");
+
+        String actualMessage = searchModal.getNoResultsMessage();
+        String expectedMessage = String.format(SearchModal.NO_RESULT_MESSAGE_FORMAT, searchCriteria);
+        Assert.assertEquals(actualMessage, expectedMessage, "The No result message is incorrect!");
+    }
+
+    @DataProvider(name = "setupSearchViewAllResults")
+    protected Object[][] setupSearchViewAllResults() {
+
+        return new Object[][]{
+                {"click"},
+                {"draganddrop"},
+        };
+    }
+
+    @Test(dataProvider = "setupSearchViewAllResults", description = "Verify whether user is able to see all results after a search operation")
+    public void testSearchViewAllResults(String searchCriteria) {
+        WebDriver driver = super.getDriver();
+
+        searchInAPIDocsPage(driver, searchCriteria).clickOnViewAllResults();
+        SearchPage searchPage = new SearchPage(driver, searchCriteria);
+        searchPage.onPage();
+        Assert.assertTrue(searchPage.areResultsValid(searchCriteria), String.format("The results doesn't match the search criteria:[%s]", searchCriteria));
+    }
+
+    private SearchModal searchInAPIDocsPage(WebDriver driver, String searchCriteria) {
+        APIDocsPage apiDocsPage = new APIDocsPage(driver);
+        apiDocsPage.navigateTo();
+        apiDocsPage.onPage();
+
+        return apiDocsPage.getNavBar()
+                .clickOnSearch()
+                .search(searchCriteria);
     }
 }
