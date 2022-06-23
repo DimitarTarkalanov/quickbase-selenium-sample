@@ -1,5 +1,6 @@
 package pages.apidocs;
 
+import io.qameta.allure.Step;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -10,11 +11,10 @@ import pages.PageObjectException;
 
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class APIDocsNavMenu {
-    public static final List<String> PROTOCOLS_ITEM_LIST = Arrays.asList("WebDriver Protocol", "Appium", "Mobile JSON Wire Protocol", "Chromium", "Firefox", "Sauce Labs", "Selenium Standalone", "JSON Wire Protocol");
+    public static final List<String> PROTOCOLS_ITEM_LIST = List.of("WebDriver Protocol", "Appium", "Mobile JSON Wire Protocol", "Chromium", "Firefox", "Sauce Labs", "Selenium Standalone", "JSON Wire Protocol");
     private static final By NAV_MENU_LOCATOR = By.className("menu");
     private static final By NAV_MENU_SECTION_LOCATOR = By.cssSelector(".theme-doc-sidebar-menu > .menu__list-item");
     private static final By NAV_MENU_SECTION_LIST_ITEM_LOCATOR = By.cssSelector("ul > li > a");
@@ -37,6 +37,7 @@ public class APIDocsNavMenu {
         throw new PageObjectException(String.format("Section [%s] not found!", section.name()));
     }
 
+    @Step("Get section items list")
     public List<String> getSectionList(Section section) {
         List<String> sectionList = new ArrayList<>();
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
