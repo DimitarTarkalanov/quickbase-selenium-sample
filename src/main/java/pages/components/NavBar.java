@@ -1,5 +1,6 @@
 package pages.components;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -8,19 +9,21 @@ public class NavBar {
     private static final By NAV_BAR_LOCATOR = By.className("navbar");
     private static final By SEARCH_BUTTON_LOCATOR = By.className("DocSearch-Button");
     private final WebDriver driver;
-    private final WebElement navBar;
+    private final WebElement navBarElement;
 
     public NavBar(WebDriver driver) {
         this.driver = driver;
-        this.navBar = driver.findElement(NAV_BAR_LOCATOR);
+        this.navBarElement = driver.findElement(NAV_BAR_LOCATOR);
     }
 
+    @Step("Click on Nav Bar menu")
     public void clickOnItem(Item item) {
-        navBar.findElement(By.linkText(item.getText())).click();
+        navBarElement.findElement(By.linkText(item.getText())).click();
     }
 
+    @Step("Click on Search")
     public SearchModal clickOnSearch() {
-        navBar.findElement(SEARCH_BUTTON_LOCATOR).click();
+        navBarElement.findElement(SEARCH_BUTTON_LOCATOR).click();
         return new SearchModal(driver);
     }
 
