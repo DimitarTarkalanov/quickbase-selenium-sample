@@ -3,7 +3,7 @@
 <suite name="WebDriverIO Sample Test Suite">
     <test name="Selenium WebDriver Tests">
         <classes>
-            <class name="">
+            <class name="common.APIDocsTests">
             </class>
         </classes>
     </test>
