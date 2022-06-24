@@ -15,20 +15,20 @@ public class TestObject {
     private WebDriver driver;
 
     @BeforeSuite
-    protected void setupTestSuite() {
+    protected final void setupTestSuite() {
         WebDriverManager.chromedriver().setup();
         WebDriverManager.firefoxdriver().setup();
         WebDriverManager.edgedriver().setup();
     }
 
     @BeforeMethod
-    protected void setUpTest() {
+    protected final void setUpTest() {
         this.driver = new ChromeDriver();
         this.driver.manage().window().maximize();
     }
 
     @AfterMethod
-    protected void tearDownTest(ITestResult testResult) {
+    protected final void tearDownTest(ITestResult testResult) {
         if (this.driver != null) {
             if (ITestResult.FAILURE == testResult.getStatus()) {
                 takeScreenshot();
@@ -42,7 +42,7 @@ public class TestObject {
         return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
     }
 
-    protected WebDriver getDriver() {
+    protected final WebDriver getDriver() {
         return driver;
     }
 }
