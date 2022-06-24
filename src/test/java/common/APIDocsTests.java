@@ -75,7 +75,7 @@ public class APIDocsTests extends TestObject {
         };
     }
 
-    @Test(dataProvider = "setupSearchResultNavigation", description = "Verify whether user is redirected to the corresponding page after search result selection", invocationCount = 10)
+    @Test(dataProvider = "setupSearchResultNavigation", description = "Verify whether user is redirected to the corresponding page after search result selection")
     public void testSearchResultNavigation(String searchCriteria, Class<? extends PageObject> pageType, String expectedHeading) throws Exception {
         WebDriver driver = super.getDriver();
 
